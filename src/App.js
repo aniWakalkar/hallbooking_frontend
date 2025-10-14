@@ -14,12 +14,12 @@ function App() {
       <Navbar />
       <div className="min-h-screen">
         <Routes>
-          <Route path="/" element={<PublicHallViewer />} />
-          <Route path="/Halls" element={<PublicHallViewer />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/mybooking" element={<MyBookings />} /> 
-          <Route path="/admin/hall/:hallId/bookings" element={<AllBookings />} />
+          <Route path="/hallbooking_frontend/" element={<PublicHallViewer />} />
+          <Route path="/hallbooking_frontend/Halls" element={<PublicHallViewer />} />
+          <Route path="/hallbooking_frontend/signup" element={<SignUp />} />
+          <Route path="/hallbooking_frontend/login" element={<LogIn />} />
+          <Route path="/hallbooking_frontend/mybooking" element={<MyBookings />} /> 
+          <Route path="/hallbooking_frontend/admin/hall/:hallId/bookings" element={<AllBookings />} />
         </Routes>
       </div>
       <Footer />
