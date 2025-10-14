@@ -6,12 +6,11 @@ function AllBookings() {
   const { hallId } = useParams();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(""); // booking id being updated
+  const [updating, setUpdating] = useState("");
   const isAdmin = localStorage.getItem("user_role") === "admin";
 
   const statusOptions = ["Pending", "Confirmed", "Cancelled"];
 
-  // Scroll to top when page opens
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -21,13 +20,13 @@ function AllBookings() {
       try {
         const token = localStorage.getItem("auth_token");
         const response = await axios.get(
-          `http://localhost:3030/api/bookings/hall/${hallId}`,
+          `${process.env.REACT_APP_API_URL}/api/bookings/hall/${hallId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const bookingsWithSelection = response.data.map(b => ({
           ...b,
           selectedStatus: b.status,
-          saveDisabled: true, // initially disabled because nothing changed
+          saveDisabled: true,
         }));
         setBookings(bookingsWithSelection);
       } catch (err) {
@@ -69,7 +68,7 @@ function AllBookings() {
       };
 
       const res = await axios.put(
-        `http://localhost:3030/api/bookings/${bookingId}`,
+        `${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Search, PlusCircle, RefreshCw, MapPin, Users, DollarSign, X } from "lucide-react";
+import { PlusCircle, RefreshCw, MapPin, Users, IndianRupee , X } from "lucide-react";
 import axios from "axios";
 import CreateHallForm from "./adminpages/CreateHallForm";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ function PublicHallViewer() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [currentHall, setCurrentHall] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({
     date: "",
     startTime: "",
@@ -23,7 +24,7 @@ function PublicHallViewer() {
   const fetchHalls = useCallback(async () => {
     setIsFetching(true);
     try {
-      const res = await axios.get("http://localhost:3030/api/halls");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/halls`);
       setHalls(res.data);
     } catch (err) {
       console.error(err);
@@ -59,6 +60,7 @@ function PublicHallViewer() {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const userId = localStorage.getItem("user_id");
     if (!userId) {
       alert("Please login to book a hall.");
@@ -68,7 +70,7 @@ function PublicHallViewer() {
     try {
       const token = localStorage.getItem("auth_token");
       await axios.post(
-        "http://localhost:3030/api/bookings",
+        `${process.env.REACT_APP_API_URL}/api/bookings`,
         {
           hallId: currentHall._id,
           userId,
@@ -79,13 +81,14 @@ function PublicHallViewer() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       alert("Booking created successfully!");
       setShowBookingModal(false);
       setCurrentHall(null);
     } catch (err) {
       alert(err.response?.data?.message || "Booking failed.");
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -94,7 +97,7 @@ function PublicHallViewer() {
       <header className="mb-8 border-b pb-4 flex justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center">
-            <Search className="w-8 h-8 mr-3 text-indigo-600" /> Discover Event Halls
+            Event Halls
           </h1>
         </div>
 
@@ -153,7 +156,7 @@ function PublicHallViewer() {
                 </span>
               </div>
               <div className="flex items-center text-green-700 font-semibold text-lg">
-                <DollarSign className="w-5 h-5 mr-3 flex-shrink-0" />
+                <IndianRupee  className="w-5 h-5 mr-3 flex-shrink-0" />
                 <span>{hall.pricePerHour}/ hour</span>
               </div>
             </div>
@@ -209,7 +212,7 @@ function PublicHallViewer() {
                 type="submit"
                 className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-150"
               >
-                Confirm Booking
+                {isSubmitting ? "Confirming Booking..." : "Confirm Booking"}
               </button>
             </form>
           </div>

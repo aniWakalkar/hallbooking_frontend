@@ -10,7 +10,7 @@ const CreateHallForm = ({ onSuccess }) => {
   useEffect(() => {
     if (message.text) {
       const timer = setTimeout(() => setMessage({ type: "", text: "" }), 1000);
-      return () => clearTimeout(timer); // cleanup
+      return () => clearTimeout(timer); 
     }
   }, [message.text]);
 
@@ -31,7 +31,7 @@ const CreateHallForm = ({ onSuccess }) => {
       setIsSubmitting(true);
       const token = localStorage.getItem("auth_token");
       const response = await axios.post(
-        "http://localhost:3030/api/halls",
+        `${process.env.REACT_APP_API_URL}/api/halls`,
         { name, location, capacity, pricePerHour },
         { headers: { Authorization: `Bearer ${token}` } }
       );

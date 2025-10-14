@@ -29,7 +29,7 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3030/api/auth/register', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, formData);
 
       if (response.status === 201) {
         setMessage({ type: 'success', text: response.data.message || 'Registration successful! Redirecting...' });

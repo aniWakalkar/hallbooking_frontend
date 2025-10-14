@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Users, DollarSign, CalendarPlus, Trash2 } from "lucide-react";
+import { MapPin, Users, IndianRupee , CalendarPlus, Trash2 } from "lucide-react";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [canceling, setCanceling] = useState(null); // id of booking being canceled
+  const [canceling, setCanceling] = useState(null); 
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -18,7 +18,7 @@ const MyBookings = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:3030/api/bookings/my", {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/bookings/my`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -40,7 +40,7 @@ const MyBookings = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      await axios.delete(`http://localhost:3030/api/bookings/${bookingId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -84,7 +84,7 @@ const MyBookings = () => {
                 <span>Capacity: {booking.hallId?.capacity || "-"}</span>
               </div>
               <div className="flex items-center text-green-700 font-semibold mb-1">
-                <DollarSign className="w-5 h-5 mr-2" />
+                <IndianRupee  className="w-5 h-5 mr-2" />
                 <span>{booking.hallId?.pricePerHour}/hour</span>
               </div>
               <div className="mt-2 text-gray-700">
