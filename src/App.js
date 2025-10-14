@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Footer from "./components/Footer";
 import PublicHallViewer from "./components/PublicHallViewer";
 import Navbar from "./components/Navbar";
@@ -8,22 +8,21 @@ import MyBookings from "./components/authpages/MyBookings";
 import AllBookings from "./components/adminpages/AllBookings";
 
 function App() {
-  
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Navbar />
       <div className="min-h-screen">
         <Routes>
-          <Route path="/hallbooking_frontend/" element={<PublicHallViewer />} />
-          <Route path="/hallbooking_frontend/Halls" element={<PublicHallViewer />} />
-          <Route path="/hallbooking_frontend/signup" element={<SignUp />} />
-          <Route path="/hallbooking_frontend/login" element={<LogIn />} />
-          <Route path="/hallbooking_frontend/mybooking" element={<MyBookings />} /> 
-          <Route path="/hallbooking_frontend/admin/hall/:hallId/bookings" element={<AllBookings />} />
+          <Route path="/" element={<PublicHallViewer />} />
+          <Route path="/Halls" element={<PublicHallViewer />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/mybooking" element={<MyBookings />} />
+          <Route path="/admin/hall/:hallId/bookings" element={<AllBookings />} />
         </Routes>
       </div>
       <Footer />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
