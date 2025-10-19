@@ -79,10 +79,11 @@ const Navbar = () => {
                   name={item.name}
                   icon={item.icon}
                   to={item.path}
-                  isActive={currentPath === item.path}
+                  isActive={currentPath === item.path || (item.name === "Halls" && currentPath === "/")}
                 />
               ))
             }
+
 
             {/* Logged-in User (non-admin): show My Bookings */}
             {isLoggedIn && !isAdmin &&
@@ -92,7 +93,7 @@ const Navbar = () => {
                   name={item.name}
                   icon={item.icon}
                   to={item.path}
-                  isActive={currentPath === item.path}
+                  isActive={currentPath === item.path || (item.name === "Halls" && currentPath === "/")}
                 />
               ))
             }

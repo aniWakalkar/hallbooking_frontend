@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Building2 } from "lucide-react";
 import axios from "axios";
 
-const CreateHallForm = ({ onSuccess }) => {
+const CreateHallForm = ({ onSuccess, formStatus }) => {
   const [formData, setFormData] = useState({ name: "", location: "", capacity: "", pricePerHour: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -42,6 +42,7 @@ const CreateHallForm = ({ onSuccess }) => {
       setMessage({ type: "error", text: err.response?.data?.message || "Unexpected error." });
     } finally {
       setIsSubmitting(false);
+      formStatus(false)
     }
   };
 

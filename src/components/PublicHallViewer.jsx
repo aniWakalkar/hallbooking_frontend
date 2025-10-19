@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle, RefreshCw, MapPin, Users, IndianRupee , X } from "lucide-react";
 import axios from "axios";
 import CreateHallForm from "./adminpages/CreateHallForm";
@@ -21,7 +21,7 @@ function PublicHallViewer() {
   const navigate = useNavigate();
 
   // --- Fetch Halls ---
-  const fetchHalls = useCallback(async () => {
+  const fetchHalls = async () => {
     setIsFetching(true);
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/halls`);
@@ -32,13 +32,13 @@ function PublicHallViewer() {
     } finally {
       setIsFetching(false);
     }
-  }, []);
+  }
 
   useEffect(() => {
     fetchHalls();
     const role = localStorage.getItem("user_role");
     setIsAdmin(role === "admin");
-  }, [fetchHalls]);
+  }, []);
 
   // --- Handle Hall Click ---
   const handleHallClick = (hall) => {
@@ -122,7 +122,7 @@ function PublicHallViewer() {
       </header>
 
       {/* Admin Create Hall Form */}
-      {isAdmin && showCreateForm && <CreateHallForm onSuccess={fetchHalls} />}
+      {isAdmin && showCreateForm && <CreateHallForm onSuccess={fetchHalls} formStatus={setShowCreateForm}/>}
 
       {/* Refresh Button */}
       <div className="flex justify-end mb-6">
