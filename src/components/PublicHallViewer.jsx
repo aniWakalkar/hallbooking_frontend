@@ -95,46 +95,50 @@ function PublicHallViewer() {
     <div className="min-h-screen bg-gray-50 p-6 sm:p-10">
       {/* Header */}
       <header className="mb-8 border-b pb-4 flex justify-between items-center">
+        
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center">
             Event Halls
           </h1>
         </div>
 
-        {/* Admin Create Hall Button */}
-        {isAdmin && (
+
+        <div className="flex items-center space-x-4 ml-auto">
+
+          {isAdmin && (
+            <button
+              onClick={() => setShowCreateForm((prev) => !prev)}
+              className={`flex items-center px-4 py-2 rounded-lg transition duration-150 ${
+                showCreateForm
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "bg-indigo-600 text-white hover:bg-indigo-700"
+              }`}
+            >
+              {showCreateForm ? (
+                <span className="w-5 h-5 mr-2 flex items-center justify-center">✕</span>
+              ) : (
+                <PlusCircle className="w-5 h-5 mr-2" />
+              )}
+              {showCreateForm ? "Close Form" : "Create Hall"}
+            </button>
+          )}
+
           <button
-            onClick={() => setShowCreateForm(prev => !prev)}
-            className={`flex items-center px-4 py-2 rounded-lg transition duration-150 ${
-              showCreateForm
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-indigo-600 text-white hover:bg-indigo-700"
-            }`}
+            onClick={fetchHalls}
+            disabled={isFetching}
+            className="flex items-center px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-100 transition duration-150 disabled:opacity-50"
           >
-            {showCreateForm ? (
-              <span className="w-5 h-5 mr-2 flex items-center justify-center">✕</span>
-            ) : (
-              <PlusCircle className="w-5 h-5 mr-2" />
-            )}
-            {showCreateForm ? "Close Form" : "Create Hall"}
+            <RefreshCw className={`w-4 h-4 mr-2 ${isFetching ? "animate-spin" : ""}`} />
+            {isFetching ? "Refreshing..." : "Refresh List"}
           </button>
-        )}
+        
+        </div>
+
       </header>
 
       {/* Admin Create Hall Form */}
       {isAdmin && showCreateForm && <CreateHallForm onSuccess={fetchHalls} formStatus={setShowCreateForm}/>}
 
-      {/* Refresh Button */}
-      <div className="flex justify-end mb-6">
-        <button
-          onClick={fetchHalls}
-          disabled={isFetching}
-          className="flex items-center px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg shadow-sm hover:bg-indigo-100 transition duration-150 disabled:opacity-50"
-        >
-          <RefreshCw className={`w-4 h-4 mr-2 ${isFetching ? "animate-spin" : ""}`} />
-          {isFetching ? "Refreshing..." : "Refresh List"}
-        </button>
-      </div>
 
       {/* Halls Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

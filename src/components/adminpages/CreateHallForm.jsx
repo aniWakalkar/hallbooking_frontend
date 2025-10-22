@@ -47,7 +47,7 @@ const CreateHallForm = ({ onSuccess, formStatus }) => {
   };
 
   return (
-    <div className="bg-white p-6 mb-8 rounded-xl shadow-xl border border-gray-100 max-w-lg mx-auto">
+    <div className="fixed top-10 left-1/2 -translate-x-1/2 z-50 bg-white p-6 rounded-xl shadow-xl border border-gray-100 w-[500px]">
       <h2 className="text-2xl font-bold mb-4 flex items-center">
         <Building2 className="w-6 h-6 mr-2 text-indigo-600" /> Create New Hall
       </h2>
@@ -62,7 +62,7 @@ const CreateHallForm = ({ onSuccess, formStatus }) => {
           {message.text}
         </div>
       )}
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         <input
           type="text"
           name="name"
@@ -98,7 +98,7 @@ const CreateHallForm = ({ onSuccess, formStatus }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-150 text-sm ${
+          className={`col-span-2 w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-150 text-sm ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
