@@ -7,18 +7,21 @@ function AllBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState("");
-  const isAdmin = localStorage.getItem("user_role") === "admin";
+  const [isAdmin, setIsAdmin] = useState("");
 
   const statusOptions = ["Pending", "Confirmed", "Cancelled"];
 
   useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const role = auth?.isActive || false;
+    setIsAdmin(role);
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem("auth_token");
+        const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/bookings/hall/${hallId}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -56,7 +59,7 @@ function AllBookings() {
 
     setUpdating(bookingId);
     try {
-      const token = localStorage.getItem("auth_token");
+      const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
 
       const payload = {
         hallId: booking.hallId._id,

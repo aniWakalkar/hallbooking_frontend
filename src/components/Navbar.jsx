@@ -27,17 +27,16 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    const role = localStorage.getItem("user_role");
+    const authData = JSON.parse(localStorage.getItem("auth") || "{}");
+    const token = authData?.token || "";
+    const role = authData?.isActive || false;
 
     setIsLoggedIn(!!token);
-    setIsAdmin(role === "admin");
+    setIsAdmin(role);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user_role");
-    localStorage.removeItem("user_id");
+    localStorage.removeItem("auth");
     setIsLoggedIn(false);
     setIsAdmin(false);
     navigate("/login");

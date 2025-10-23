@@ -6,31 +6,36 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [token, setToken] = useState("");
   const [canceling, setCanceling] = useState(null); 
 
+
+  const fetchBookings = async (storedToken) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/bookings/my`,
+        {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        }
+      );
+      setBookings(response.data);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch bookings.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   useEffect(() => {
-    const fetchBookings = async () => {
-      const token = localStorage.getItem("auth_token");
-      if (!token) {
-        setError("You must be logged in to view your bookings.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/bookings/my`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setBookings(response.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch bookings.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
+    const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+    if (!token) {
+      setError("You must be logged in to view your bookings.");
+      setLoading(false);
+      return;
+    }
+    setToken(token);
+    fetchBookings(token);
   }, []);
 
   const handleCancel = async (bookingId) => {
@@ -39,7 +44,6 @@ const MyBookings = () => {
     setCanceling(bookingId);
 
     try {
-      const token = localStorage.getItem("auth_token");
       await axios.delete(`${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

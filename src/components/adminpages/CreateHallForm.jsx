@@ -29,7 +29,7 @@ const CreateHallForm = ({ onSuccess, formStatus }) => {
 
     try {
       setIsSubmitting(true);
-      const token = localStorage.getItem("auth_token");
+      const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/halls`,
         { name, location, capacity, pricePerHour },

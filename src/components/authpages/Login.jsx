@@ -33,14 +33,12 @@ function Login() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
       if (response.status === 200) {
-        localStorage.setItem("auth_token", response.data.token);
-        localStorage.setItem("user_id", response.data.user_id);
-        localStorage.setItem("user_role", response.data.role);
         setMessage({ type: 'success', text: response.data.message || 'Login successful! Redirecting...' });
-
+        localStorage.setItem("auth", JSON.stringify({"token" : response.data.token, "isActive" : response.data.role === "admin" ? true : false}));
+        
         setTimeout(() => {
           navigate('/');
-          window.location.reload();
+          window.location.reload();  // use REDUX
         }, 1000);
       }
     } catch (error) {

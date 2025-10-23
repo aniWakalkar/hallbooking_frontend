@@ -36,14 +36,14 @@ function PublicHallViewer() {
 
   useEffect(() => {
     fetchHalls();
-    const role = localStorage.getItem("user_role");
-    setIsAdmin(role === "admin");
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const role = auth?.isActive || false;
+    setIsAdmin(role);
   }, []);
 
   // --- Handle Hall Click ---
   const handleHallClick = (hall) => {
-    const role = localStorage.getItem("user_role");
-    if (role === "admin") {
+    if (isAdmin) {
       navigate(`/admin/hall/${hall._id}/bookings`);
     } else {
       setCurrentHall(hall);
@@ -61,19 +61,18 @@ function PublicHallViewer() {
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const userId = localStorage.getItem("user_id");
-    if (!userId) {
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const token = auth?.token || "";
+    if (!token) {
       alert("Please login to book a hall.");
       return;
     }
 
     try {
-      const token = localStorage.getItem("auth_token");
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/bookings`,
         {
           hallId: currentHall._id,
-          userId,
           date: bookingData.date,
           startTime: bookingData.startTime,
           endTime: bookingData.endTime,
