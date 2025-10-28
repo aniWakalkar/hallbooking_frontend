@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 function AllBookings() {
   const { hallId } = useParams();
@@ -8,20 +9,14 @@ function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
-
+  const token = useSelector((state) => state.userAuth.token);
+  const role = useSelector((state) => state.userAuth.role);
   const statusOptions = ["Pending", "Confirmed", "Cancelled"];
 
-  useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    const role = auth?.isActive || false;
-    setIsAdmin(role);
-    window.scrollTo(0, 0);
-  }, []);
 
-  useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+        // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/bookings/hall/${hallId}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -40,8 +35,15 @@ function AllBookings() {
       }
     };
 
+
+  useEffect(() => {
+    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    // const role = auth?.isActive || false;
     fetchBookings();
-  }, [hallId]);
+    setIsAdmin(role === "admin");
+    window.scrollTo(0, 0);
+
+  }, [hallId, role]);
 
   const handleStatusSelect = (bookingId, newStatus) => {
     setBookings(prev =>
@@ -59,7 +61,7 @@ function AllBookings() {
 
     setUpdating(bookingId);
     try {
-      const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+      // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
 
       const payload = {
         hallId: booking.hallId._id,

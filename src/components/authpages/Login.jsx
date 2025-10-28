@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { LogIn as LogInIcon, Mail, Lock, AlertTriangle, CheckCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AlertTriangle, CheckCircle, Lock, LogIn as LogInIcon, Mail } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
+import { setUser } from '../../redux/actions';
 
 const MessageComponent = ({ type, text }) => {
   if (!text) return null;
@@ -24,6 +26,16 @@ function Login() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const dispatch = useDispatch();
+  const userAuth = useSelector((state) => state.userAuth);
+
+
+    useEffect(() => {
+    if (userAuth.isAuthenticated) {
+      navigate('/');
+    }
+  }, [userAuth.isAuthenticated, navigate])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,12 +46,13 @@ function Login() {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
       if (response.status === 200) {
         setMessage({ type: 'success', text: response.data.message || 'Login successful! Redirecting...' });
-        localStorage.setItem("auth", JSON.stringify({"token" : response.data.token, "isActive" : response.data.role === "admin" ? true : false}));
-        
-        setTimeout(() => {
-          navigate('/');
-          window.location.reload();  // use REDUX
-        }, 1000);
+        // localStorage.setItem("auth", JSON.stringify({"token" : response.data.token, "isActive" : response.data.role === "admin" ? true : false}));
+        dispatch(setUser(response.data.token, response.data.role));
+
+        // setTimeout(() => {
+        //   navigate('/');
+        //   window.location.reload();  // use REDUX
+        // }, 1000);
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred.';

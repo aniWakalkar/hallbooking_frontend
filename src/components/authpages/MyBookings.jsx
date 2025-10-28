@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Users, IndianRupee , CalendarPlus, Trash2 } from "lucide-react";
+import { CalendarPlus, IndianRupee, MapPin, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
   const [canceling, setCanceling] = useState(null); 
-
+  const token = useSelector((state) => state.userAuth.token);
 
   const fetchBookings = async (storedToken) => {
     try {
@@ -28,15 +29,15 @@ const MyBookings = () => {
 
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+    // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
     if (!token) {
       setError("You must be logged in to view your bookings.");
       setLoading(false);
       return;
     }
-    setToken(token);
+    // setToken(token);
     fetchBookings(token);
-  }, []);
+  }, [token]);
 
   const handleCancel = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
@@ -115,7 +116,7 @@ const MyBookings = () => {
               </div>
 
               {/* Cancel Booking Button */}
-              {booking.status !== "Cancelled" && (
+              {/* {booking.status !== "Cancelled" && (
                 <button
                   onClick={() => handleCancel(booking._id)}
                   disabled={canceling === booking._id}
@@ -124,7 +125,7 @@ const MyBookings = () => {
                   <Trash2 className="w-4 h-4 mr-2" />
                   {canceling === booking._id ? "Canceling..." : "Cancel Booking"}
                 </button>
-              )}
+              )} */}
             </div>
           ))}
         </div>

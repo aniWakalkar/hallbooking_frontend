@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Building2 } from "lucide-react";
 import axios from "axios";
+import { Building2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const CreateHallForm = ({ onSuccess, formStatus }) => {
   const [formData, setFormData] = useState({ name: "", location: "", capacity: "", pricePerHour: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const token = useSelector((state) => state.userAuth.token);
 
   useEffect(() => {
     if (message.text) {
@@ -29,7 +31,7 @@ const CreateHallForm = ({ onSuccess, formStatus }) => {
 
     try {
       setIsSubmitting(true);
-      const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+      // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/halls`,
         { name, location, capacity, pricePerHour },

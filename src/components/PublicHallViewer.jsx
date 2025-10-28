@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { PlusCircle, RefreshCw, MapPin, Users, IndianRupee , X } from "lucide-react";
 import axios from "axios";
-import CreateHallForm from "./adminpages/CreateHallForm";
+import { IndianRupee, MapPin, PlusCircle, RefreshCw, Users, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CreateHallForm from "./adminpages/CreateHallForm";
 
 function PublicHallViewer() {
   const [halls, setHalls] = useState([]);
@@ -17,7 +18,8 @@ function PublicHallViewer() {
     startTime: "",
     endTime: "",
   });
-
+  const token = useSelector((state) => state.userAuth.token);
+  const role = useSelector((state) => state.userAuth.role);
   const navigate = useNavigate();
 
   // --- Fetch Halls ---
@@ -36,10 +38,10 @@ function PublicHallViewer() {
 
   useEffect(() => {
     fetchHalls();
-    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    const role = auth?.isActive || false;
-    setIsAdmin(role);
-  }, []);
+    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    // const role = auth?.isActive || false;
+    setIsAdmin(role === "admin");
+  }, [role]);
 
   // --- Handle Hall Click ---
   const handleHallClick = (hall) => {
@@ -61,8 +63,8 @@ function PublicHallViewer() {
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    const token = auth?.token || "";
+    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    // const token = auth?.token || "";
     if (!token) {
       alert("Please login to book a hall.");
       return;
