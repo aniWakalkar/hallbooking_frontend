@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { AlertTriangle, CheckCircle, Lock, LogIn as LogInIcon, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import { setUser } from '../../redux/actions';
+// import { setUser } from '../../redux/actions';
 
 const MessageComponent = ({ type, text }) => {
   if (!text) return null;
@@ -26,15 +26,15 @@ function Login() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const dispatch = useDispatch();
-  const userAuth = useSelector((state) => state.userAuth);
-
+  // const dispatch = useDispatch();
+  // const userAuth = useSelector((state) => state.userAuth.role);
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
 
     useEffect(() => {
-    if (userAuth.isAuthenticated) {
+    if (auth.token) {
       navigate('/');
     }
-  }, [userAuth.isAuthenticated, navigate])
+  }, [auth, navigate])
 
 
   const handleSubmit = async (e) => {
@@ -45,9 +45,17 @@ function Login() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
       if (response.status === 200) {
+
+        const authData = JSON.parse(localStorage.getItem("auth") || "{}");
+        const token = authData?.token || "";
+
+        if(token){
+          localStorage.removeItem("auth");
+        }
+        
         setMessage({ type: 'success', text: response.data.message || 'Login successful! Redirecting...' });
-        // localStorage.setItem("auth", JSON.stringify({"token" : response.data.token, "isActive" : response.data.role === "admin" ? true : false}));
-        dispatch(setUser(response.data.token, response.data.role));
+        localStorage.setItem("auth", JSON.stringify({"token" : response.data.token, "isActive" : response.data.role === "admin" ? true : false}));
+        // dispatch(setUser(response.data.token, response.data.role));
 
         // setTimeout(() => {
         //   navigate('/');

@@ -1,8 +1,8 @@
 import { Building2, CalendarPlus, LogIn as LogInIcon, LogOut, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { logoutUser } from "../redux/actions";
+// import { logoutUser } from "../redux/actions";
 
 const NavItem = ({ name, icon, to, isActive }) => (
   <Link
@@ -27,23 +27,23 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.userAuth.isAuthenticated);
-  const token = useSelector((state) => state.userAuth.token);
-  const role = useSelector((state) => state.userAuth.role);
+  const authData = JSON.parse(localStorage.getItem("auth") || "{}");
+  const token = authData?.token || "";
+  const role = authData?.isActive || false;
+  
+  // const dispatch = useDispatch();
+  // const isAuthenticated = useSelector((state) => state.userAuth.isAuthenticated);
+  // const token = useSelector((state) => state.userAuth.token);
+  // const role = useSelector((state) => state.userAuth.role);
 
   useEffect(() => {
-    // const authData = JSON.parse(localStorage.getItem("auth") || "{}");
-    // const token = authData?.token || "";
-    // const role = authData?.isActive || false;
-    
-    setIsLoggedIn(!!token);
-    setIsAdmin(role === "admin");
-  }, [isAuthenticated, role, token]);
+    setIsLoggedIn(token);
+    setIsAdmin(role);
+  }, [token, role]);
 
   const handleLogout = () => {
-    // localStorage.removeItem("auth");
-    dispatch(logoutUser());
+    localStorage.removeItem("auth");
+    // dispatch(logoutUser());
     setIsLoggedIn(false);
     setIsAdmin(false);
     navigate("/login");

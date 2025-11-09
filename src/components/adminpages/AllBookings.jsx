@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 function AllBookings() {
@@ -9,14 +9,15 @@ function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState("");
   const [isAdmin, setIsAdmin] = useState("");
-  const token = useSelector((state) => state.userAuth.token);
-  const role = useSelector((state) => state.userAuth.role);
+  // const token = useSelector((state) => state.userAuth.token);
+  // const role = useSelector((state) => state.userAuth.role);
   const statusOptions = ["Pending", "Confirmed", "Cancelled"];
+  const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+  const role = JSON.parse(localStorage.getItem("auth") || "{}")?.isActive || false;
 
 
     const fetchBookings = async () => {
       try {
-        // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/bookings/hall/${hallId}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -37,10 +38,8 @@ function AllBookings() {
 
 
   useEffect(() => {
-    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    // const role = auth?.isActive || false;
     fetchBookings();
-    setIsAdmin(role === "admin");
+    setIsAdmin(role);
     window.scrollTo(0, 0);
 
   }, [hallId, role]);
@@ -61,8 +60,6 @@ function AllBookings() {
 
     setUpdating(bookingId);
     try {
-      // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
-
       const payload = {
         hallId: booking.hallId._id,
         userId: booking.userId._id,

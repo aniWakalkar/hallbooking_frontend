@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IndianRupee, MapPin, PlusCircle, RefreshCw, Users, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CreateHallForm from "./adminpages/CreateHallForm";
 
@@ -12,14 +12,16 @@ function PublicHallViewer() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [currentHall, setCurrentHall] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  // const [isToken, setToken] = useState("");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({
     date: "",
     startTime: "",
     endTime: "",
   });
-  const token = useSelector((state) => state.userAuth.token);
-  const role = useSelector((state) => state.userAuth.role);
+  // const token = useSelector((state) => state.userAuth.token);
+  // const role = useSelector((state) => state.userAuth.role);
   const navigate = useNavigate();
 
   // --- Fetch Halls ---
@@ -38,10 +40,10 @@ function PublicHallViewer() {
 
   useEffect(() => {
     fetchHalls();
-    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    // const role = auth?.isActive || false;
-    setIsAdmin(role === "admin");
-  }, [role]);
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const role = auth?.isActive || false;
+    setIsAdmin(role);
+  }, [isAdmin]);
 
   // --- Handle Hall Click ---
   const handleHallClick = (hall) => {
@@ -63,8 +65,8 @@ function PublicHallViewer() {
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-    // const token = auth?.token || "";
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const token = auth?.token || "";
     if (!token) {
       alert("Please login to book a hall.");
       return;

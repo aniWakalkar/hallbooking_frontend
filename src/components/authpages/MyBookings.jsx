@@ -1,15 +1,15 @@
 import axios from "axios";
 import { CalendarPlus, IndianRupee, MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  // const [token, setToken] = useState("");
-  const [canceling, setCanceling] = useState(null); 
-  const token = useSelector((state) => state.userAuth.token);
+  // const [canceling, setCanceling] = useState(null); 
+  // const token = useSelector((state) => state.userAuth.token);
+  const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
 
   const fetchBookings = async (storedToken) => {
     try {
@@ -29,35 +29,33 @@ const MyBookings = () => {
 
 
   useEffect(() => {
-    // const token = JSON.parse(localStorage.getItem("auth") || "{}")?.token || "";
+    
     if (!token) {
       setError("You must be logged in to view your bookings.");
       setLoading(false);
       return;
     }
-    // setToken(token);
     fetchBookings(token);
   }, [token]);
 
-  const handleCancel = async (bookingId) => {
-    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+  // const handleCancel = async (bookingId) => {
+  //   if (!window.confirm("Are you sure you want to cancel this booking?")) return;
 
-    setCanceling(bookingId);
+  //   setCanceling(bookingId);
 
-    try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  //   try {
+  //     await axios.delete(`${process.env.REACT_APP_API_URL}/api/bookings/${bookingId}`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
 
-      // Remove canceled booking from state
-      setBookings(prev => prev.filter(b => b._id !== bookingId));
-      alert("Booking canceled successfully!");
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to cancel booking.");
-    } finally {
-      setCanceling(null);
-    }
-  };
+  //     setBookings(prev => prev.filter(b => b._id !== bookingId));
+  //     alert("Booking canceled successfully!");
+  //   } catch (err) {
+  //     alert(err.response?.data?.message || "Failed to cancel booking.");
+  //   } finally {
+  //     setCanceling(null);
+  //   }
+  // };
 
   if (loading) return <p className="text-center mt-10">Loading your bookings...</p>;
   if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
